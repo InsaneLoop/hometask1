@@ -7,5 +7,7 @@ Vagrant.configure("2") do |config|
     yum install -y nginx
     systemctl start nginx
     systemctl enable nginx
+    mkdir -p /home/vagrant/www-content
+    echo "<html><body><h1>Hello from Nginx on Vagrant!</h1></body></html>" > /home/vagrant/www-content/index.html
   SHELL
 end
