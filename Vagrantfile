@@ -81,34 +81,26 @@
 # vi: set ft=ruby :
 
 Vagrant.configure("2") do |config|
-  # Вказуємо базове зображення CentOS 9 Stream
   config.vm.box = "generic/centos9s"
 
-  # Налаштування перенаправлення порту
   config.vm.network "forwarded_port", guest: 80, host: 8888
 
-  # Налаштування пам'яті та процесорів (можна змінити за потреби)
   config.vm.provider "virtualbox" do |vb|
     vb.memory = "1024"
     vb.cpus = 2
   end
 
-  # Сценарій для встановлення та налаштування Nginx
   config.vm.provision "shell", inline: <<-SHELL
-    # Встановлення epel-release та Nginx
     yum install -y epel-release
     yum install -y nginx
 
-    # Вимкнення SELinux
     setenforce 0
     sed -ie 's/^SELINUX=.*$/SELINUX=disabled/' /etc/selinux/config
     cat /etc/selinux/config
 
-    # Запуск і автоматичний запуск Nginx
     systemctl start nginx
     systemctl enable nginx
 
-    # Вимкнення та зупинка firewalld
     systemctl disable firewalld
     systemctl stop firewalld
   SHELL
